@@ -13,9 +13,9 @@ public class PostDto {
     
     private String text;
     
-    private Long likesCount;
-    
     private LocalDate createdDate;
 
     private LocalDate lastModifiedDate;
+
+    private UserDto author;
 }

@@ -54,9 +54,6 @@ public class UserEntity implements UserDetails {
     @Column(length = 60)
     private String password;
 
-    @NotNull
-    private LocalDate dateOfBirth;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -8,6 +8,7 @@ import com.gor.socialmediarest.utils.ResponseBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -26,9 +27,14 @@ public class UserController {
     private final ResponseBuilder responseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    public ResponseEntity<?> getUser(@PathVariable long id) {
         UserDto userDto = userService.fetchById(id);
-        return responseBuilder.buildResponse("Successful", HttpStatus.OK, userDto);
+        return responseBuilder.buildResponse("User is fetched successfully", HttpStatus.OK, userDto);
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<?> getUserPosts(@PathVariable long id) {
+        return responseBuilder.buildResponse("Posts are fetched successfully", HttpStatus.OK, userService.fetchUserPosts(id));
     }
 
     @GetMapping("/roles")
@@ -38,15 +44,16 @@ public class UserController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getUsers() {
-        return responseBuilder.buildResponse("Successful", HttpStatus.OK,
+        return responseBuilder.buildResponse("Users are fetched successfully", HttpStatus.OK,
                 userService.fetchAllUsers()
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody UpdateUserRequest request) {
         if (!Objects.equals(id, userService.loadAuthenticatedUser().getId())) {
             responseBuilder.buildResponse("Permission denied", HttpStatus.FORBIDDEN);
         }
@@ -59,7 +66,7 @@ public class UserController {
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             throw new RuntimeException("First log out");
         }
-        userService.registerUser(request);
+        userService.createUser(request);
         return responseBuilder.buildResponse("User registered successfully", HttpStatus.OK);
     }
 }

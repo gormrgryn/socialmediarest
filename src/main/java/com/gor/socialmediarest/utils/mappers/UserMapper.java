@@ -14,23 +14,18 @@ public class UserMapper {
 
     public PasswordEncoder passwordEncoder;
     public LocalDateFormatter localDateFormatter;
-    public PostMapper postMapper;
 
     @Autowired
-    public UserMapper(PasswordEncoder passwordEncoder, LocalDateFormatter localDateFormatter, PostMapper postMapper) {
+    public UserMapper(PasswordEncoder passwordEncoder, LocalDateFormatter localDateFormatter) {
         this.passwordEncoder = passwordEncoder;
         this.localDateFormatter = localDateFormatter;
-        this.postMapper = postMapper;
     }
 
     public UserDto toDto(UserEntity user) {
         return new UserDto(
                 user.getId(),
                 user.getName(),
-                user.getUsername(),
-                user.getPosts()
-                        .stream()
-                        .map(postMapper::toDto).collect(Collectors.toList())
+                user.getUsername()
         );
     }
 
