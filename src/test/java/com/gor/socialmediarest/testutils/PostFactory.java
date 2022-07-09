@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostFactory {
     public PostEntity createEntity() {
-        return new PostEntity("post");
+        PostEntity post = new PostEntity("post");
+        post.setId(1L);
+        return post;
     }
 }

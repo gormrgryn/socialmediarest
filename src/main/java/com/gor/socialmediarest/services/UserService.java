@@ -118,6 +118,7 @@ public class UserService implements UserDetailsService {
         );
         checkRequestCredentialsUnique(request);
         user.setUsername(request.getUsername());
+        user.setName(request.getName());
         userRepository.save(user);
     }
 

@@ -5,6 +5,10 @@ import com.gor.socialmediarest.requests.CreateUserRequest;
 import com.gor.socialmediarest.requests.UpdateUserRequest;
 import com.gor.socialmediarest.services.UserService;
 import com.gor.socialmediarest.utils.ResponseBuilder;
+import com.gor.socialmediarest.utils.exceptions.InvalidNameException;
+import com.gor.socialmediarest.utils.exceptions.InvalidPasswordException;
+import com.gor.socialmediarest.utils.exceptions.InvalidUsernameException;
+import java.time.format.DateTimeParseException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import lombok.AllArgsConstructor;
 
 import java.util.Objects;
+import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/user")
@@ -53,7 +58,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody UpdateUserRequest request) throws InvalidNameException, InvalidUsernameException, RuntimeException, IllegalArgumentException {
         if (!Objects.equals(id, userService.loadAuthenticatedUser().getId())) {
             responseBuilder.buildResponse("Permission denied", HttpStatus.FORBIDDEN);
         }
@@ -62,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) throws InvalidPasswordException, IllegalArgumentException, RuntimeException, DateTimeParseException, EntityNotFoundException, InvalidUsernameException, InvalidNameException {
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             throw new RuntimeException("First log out");
         }
