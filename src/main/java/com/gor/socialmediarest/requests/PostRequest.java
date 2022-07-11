@@ -5,4 +5,8 @@ import lombok.Data;
 @Data
 public class PostRequest {
     private String text;
+
+    public PostRequest(String text) {
+        this.text = text;
+    }
 }
