@@ -1,6 +1,6 @@
 ## Description
 
-Social media app backend api, built using Spring Boot, Hibernate.
+Social media app backend api with unit tests, built using Spring Boot, Hibernate.
 
 ## REST API endpoints
 <ul>
@@ -53,6 +53,11 @@ Run the app
 ```
 cd socialmediarest
 ./mvnw spring-boot:run
+```
+
+### Run Tests
+```
+./mvnw test
 ```
 
 
