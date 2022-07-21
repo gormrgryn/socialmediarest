@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 public class TestConfig {
     @Bean
     public PostFactory postFactory() {
-        return new PostFactory();
+        return new PostFactory(userFactory());
     }
     
     @Bean
