@@ -18,11 +18,13 @@ public class PostRepositoryTest {
 
     private final PostRepository postRepository;
     private final PostFactory postFactory;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PostRepositoryTest(PostRepository postRepository, PostFactory postFactory) {
+    public PostRepositoryTest(PostRepository postRepository, PostFactory postFactory, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postFactory = postFactory;
+        this.userRepository = userRepository;
     }
 
     @AfterEach
@@ -33,7 +35,7 @@ public class PostRepositoryTest {
     @Test
     public void deletePostById_Success() {
         PostEntity post = postFactory.createEntity();
-        post = postRepository.save(post);
+        post = save(post);
         postRepository.deleteById(post.getId());
 
         assertThat(postRepository.findAll()).isEmpty();
@@ -42,7 +44,7 @@ public class PostRepositoryTest {
     @Test
     public void deleteAllPosts_Success() {
         PostEntity post = postFactory.createEntity();
-        postRepository.save(post);
+        save(post);
         postRepository.deleteAll();
 
         assertThat(postRepository.findAll()).isEmpty();
@@ -51,7 +53,7 @@ public class PostRepositoryTest {
     @Test
     public void savePost_Success() {
         PostEntity post = postFactory.createEntity();
-        post = postRepository.save(post);
+        post = save(post);
 
         assertThat(postRepository.findAll()).contains(post);
     }
@@ -59,7 +61,7 @@ public class PostRepositoryTest {
     @Test
     public void findPostById_Success() {
         PostEntity post = postFactory.createEntity();
-        post = postRepository.save(post);
+        post = save(post);
 
         assertThat(postRepository.findById(post.getId())).isEqualTo(Optional.of(post));
     }
@@ -68,6 +70,11 @@ public class PostRepositoryTest {
     public void deletePostById_Failure() {
         assertThatThrownBy(() -> postRepository.deleteById(10L))
                 .isInstanceOf(org.springframework.dao.EmptyResultDataAccessException.class);
+    }
+    
+    private PostEntity save(PostEntity post) {
+        post.setAuthor(userRepository.save(post.getAuthor()));
+        return postRepository.save(post);
     }
 
 }
