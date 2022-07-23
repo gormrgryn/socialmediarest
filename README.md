@@ -48,8 +48,7 @@ spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}/{db_name}
 spring.datasource.username={username}
 spring.datasource.password={password}
 ```
-Run your database
-Run the app
+Run your database, then run the app
 ```
 cd socialmediarest
 ./mvnw spring-boot:run
